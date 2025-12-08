@@ -85,6 +85,8 @@ public class Pion {
     }
     
     public void devenirDame(){
-        
+        if (position.getY()==9){
+           this = new Dame(couleurs.get(this.couleur), position.getX(), position.getY());
+        }
     }
 }
