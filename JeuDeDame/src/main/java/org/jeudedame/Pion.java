@@ -87,4 +87,22 @@ public class Pion {
     public void devenirDame(){
         
     }
+
+    public int getCouleur() {
+        return couleur;
+    }
+
+    public void setCouleur(int couleur) {
+        this.couleur = couleur;
+    }
+
+    public Point2D getPosition() {
+        return position;
+    }
+
+    public void setPosition(Point2D position) {
+        this.position = position;
+    }
+    
+    
 }
