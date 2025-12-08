@@ -5,12 +5,11 @@
 package org.jeudedame;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 /**
  * Classe représentant un tour de jeu dans une partie de dames
- * Gère les déplacements, les captures et la validation des coups
+ * Gère l'interaction avec le joueur pour effectuer son coup
  * @author jujus
  */
 public class TourDeJeu {
@@ -19,10 +18,6 @@ public class TourDeJeu {
     private Joueur joueurActif;
     private Point2D positionDepart;
     private Point2D positionArrivee;
-    private List<Point2D> capturesEffectuees;
-    private boolean estCapture;
-    private boolean estCaptureMultiple;
-    private boolean transformationEnDame;
     private int numeroTour;
     
     /**
@@ -32,10 +27,6 @@ public class TourDeJeu {
         this.joueurActif = null;
         this.positionDepart = null;
         this.positionArrivee = null;
-        this.capturesEffectuees = new ArrayList<>();
-        this.estCapture = false;
-        this.estCaptureMultiple = false;
-        this.transformationEnDame = false;
         this.numeroTour = 0;
     }
     
@@ -48,28 +39,6 @@ public class TourDeJeu {
         this.joueurActif = joueurActif;
         this.positionDepart = null;
         this.positionArrivee = null;
-        this.capturesEffectuees = new ArrayList<>();
-        this.estCapture = false;
-        this.estCaptureMultiple = false;
-        this.transformationEnDame = false;
-        this.numeroTour = numeroTour;
-    }
-    
-    /**
-     * Constructeur complet
-     * @param joueurActif Le joueur qui effectue le tour
-     * @param positionDepart La position de départ de la pièce
-     * @param positionArrivee La position d'arrivée de la pièce
-     * @param numeroTour Le numéro du tour
-     */
-    public TourDeJeu(Joueur joueurActif, Point2D positionDepart, Point2D positionArrivee, int numeroTour) {
-        this.joueurActif = joueurActif;
-        this.positionDepart = positionDepart;
-        this.positionArrivee = positionArrivee;
-        this.capturesEffectuees = new ArrayList<>();
-        this.estCapture = false;
-        this.estCaptureMultiple = false;
-        this.transformationEnDame = false;
         this.numeroTour = numeroTour;
     }
     
@@ -99,51 +68,11 @@ public class TourDeJeu {
     }
     
     /**
-     * Obtient la liste des captures effectuées
-     * @return La liste des positions des pièces capturées
-     */
-    public List<Point2D> getCapturesEffectuees() {
-        return capturesEffectuees;
-    }
-    
-    /**
-     * Vérifie si le coup est une capture
-     * @return true si c'est une capture, false sinon
-     */
-    public boolean isEstCapture() {
-        return estCapture;
-    }
-    
-    /**
-     * Vérifie si c'est une capture multiple
-     * @return true si c'est une capture multiple, false sinon
-     */
-    public boolean isEstCaptureMultiple() {
-        return estCaptureMultiple;
-    }
-    
-    /**
-     * Vérifie s'il y a eu transformation en dame
-     * @return true si transformation en dame, false sinon
-     */
-    public boolean isTransformationEnDame() {
-        return transformationEnDame;
-    }
-    
-    /**
      * Obtient le numéro du tour
      * @return Le numéro du tour
      */
     public int getNumeroTour() {
         return numeroTour;
-    }
-    
-    /**
-     * Obtient le nombre de captures effectuées
-     * @return Le nombre de pièces capturées
-     */
-    public int getNombreCaptures() {
-        return capturesEffectuees.size();
     }
     
     // Setters
@@ -172,30 +101,6 @@ public class TourDeJeu {
     }
     
     /**
-     * Définit si le coup est une capture
-     * @param estCapture true si c'est une capture
-     */
-    public void setEstCapture(boolean estCapture) {
-        this.estCapture = estCapture;
-    }
-    
-    /**
-     * Définit si c'est une capture multiple
-     * @param estCaptureMultiple true si c'est une capture multiple
-     */
-    public void setEstCaptureMultiple(boolean estCaptureMultiple) {
-        this.estCaptureMultiple = estCaptureMultiple;
-    }
-    
-    /**
-     * Définit s'il y a transformation en dame
-     * @param transformationEnDame true s'il y a transformation
-     */
-    public void setTransformationEnDame(boolean transformationEnDame) {
-        this.transformationEnDame = transformationEnDame;
-    }
-    
-    /**
      * Définit le numéro du tour
      * @param numeroTour Le numéro du tour
      */
@@ -204,156 +109,9 @@ public class TourDeJeu {
     }
     
     // Méthodes métier
-    /**
-     * Enregistre un déplacement simple (sans capture)
-     * @param depart Position de départ
-     * @param arrivee Position d'arrivée
-     */
-    public void enregistrerDeplacement(Point2D depart, Point2D arrivee) {
-        this.positionDepart = depart;
-        this.positionArrivee = arrivee;
-        this.estCapture = false;
-        this.estCaptureMultiple = false;
-    }
-    
-    /**
-     * Enregistre une capture
-     * @param depart Position de départ
-     * @param arrivee Position d'arrivée
-     * @param positionCapture Position de la pièce capturée
-     */
-    public void enregistrerCapture(Point2D depart, Point2D arrivee, Point2D positionCapture) {
-        this.positionDepart = depart;
-        this.positionArrivee = arrivee;
-        this.capturesEffectuees.add(positionCapture);
-        this.estCapture = true;
-        this.estCaptureMultiple = capturesEffectuees.size() > 1;
-    }
-    
-    /**
-     * Ajoute une capture supplémentaire (pour les captures multiples)
-     * @param positionCapture Position de la pièce capturée
-     */
-    public void ajouterCapture(Point2D positionCapture) {
-        this.capturesEffectuees.add(positionCapture);
-        this.estCapture = true;
-        this.estCaptureMultiple = capturesEffectuees.size() > 1;
-    }
-    
-    /**
-     * Marque qu'une transformation en dame a eu lieu
-     */
-    public void marquerTransformationEnDame() {
-        this.transformationEnDame = true;
-    }
-    
-    /**
-     * Vérifie si le tour est valide (a les informations minimales requises)
-     * @return true si le tour est valide, false sinon
-     */
-    public boolean estValide() {
-        return joueurActif != null && 
-               positionDepart != null && 
-               positionArrivee != null;
-    }
-    
-    /**
-     * Réinitialise le tour
-     */
-    public void reinitialiser() {
-        this.positionDepart = null;
-        this.positionArrivee = null;
-        this.capturesEffectuees.clear();
-        this.estCapture = false;
-        this.estCaptureMultiple = false;
-        this.transformationEnDame = false;
-    }
-    
-    /**
-     * Annule le tour (pour un système d'annulation)
-     */
-    public void annuler() {
-        reinitialiser();
-    }
-    
-    /**
-     * Calcule la distance du déplacement
-     * @return La distance entre la position de départ et d'arrivée
-     */
-    public double calculerDistanceDeplacement() {
-        if (positionDepart == null || positionArrivee == null) {
-            return 0.0;
-        }
-        int dx = Math.abs(positionArrivee.getX() - positionDepart.getX());
-        int dy = Math.abs(positionArrivee.getY() - positionDepart.getY());
-        return Math.sqrt(dx * dx + dy * dy);
-    }
-    
-    /**
-     * Génère une description textuelle du mouvement
-     * @return Une description du mouvement au format notation algébrique
-     */
-    public String genererNotation() {
-        if (!estValide()) {
-            return "Coup invalide";
-        }
-        
-        StringBuilder notation = new StringBuilder();
-        notation.append(positionDepart.toString());
-        
-        if (estCapture) {
-            notation.append("x"); // x pour capture
-        } else {
-            notation.append("-"); // - pour déplacement simple
-        }
-        
-        notation.append(positionArrivee.toString());
-        
-        if (estCaptureMultiple) {
-            notation.append(" (x").append(capturesEffectuees.size()).append(")");
-        }
-        
-        if (transformationEnDame) {
-            notation.append("D"); // D pour Dame
-        }
-        
-        return notation.toString();
-    }
-    
-    /**
-     * Retourne une représentation textuelle du tour
-     * @return Une chaîne décrivant le tour
-     */
-    @Override
-    public String toString() {
-        return "Tour #" + numeroTour + 
-               " - Joueur: " + (joueurActif != null ? joueurActif.getNom() : "inconnu") +
-               " (" + (joueurActif != null ? joueurActif.getCouleur() : "?") + ")" +
-               " | Coup: " + genererNotation() +
-               (estCapture ? " | Captures: " + getNombreCaptures() : "") +
-               (transformationEnDame ? " | Promotion en Dame" : "");
-    }
-    
-    /**
-     * Compare deux tours de jeu
-     * @param obj L'objet à comparer
-     * @return true si les tours sont identiques, false sinon
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        TourDeJeu tour = (TourDeJeu) obj;
-        return numeroTour == tour.numeroTour &&
-               joueurActif.equals(tour.joueurActif) &&
-               positionDepart.equals(tour.positionDepart) &&
-               positionArrivee.equals(tour.positionArrivee);
-    }
     
     /**
      * Affiche la grille du jeu de dames
-     * Note: Cette méthode sera idéalement déplacée dans la classe Partie.java
-     * mais est placée ici temporairement pour permettre l'affichage pendant un tour
      * @param pions La liste des pions sur le plateau
      */
     private void afficherGrille(ArrayList<Pion> pions) {
@@ -376,13 +134,17 @@ public class TourDeJeu {
                 if (pionAPosition == null) {
                     // Case vide - alternance noir/blanc
                     if ((i + j) % 2 == 0) {
-                        System.out.print("▢ "); // Case blanche
+                        System.out.print("□ "); // Case blanche (non jouable)
                     } else {
-                        System.out.print("▪ "); // Case noire
+                        System.out.print("■ "); // Case noire (jouable)
                     }
                 } else {
-                    // Affichage de la pièce
-                    System.out.print(pionAPosition.toString() + " ");
+                    // Affichage de la pièce selon sa couleur
+                    if (pionAPosition.getCouleur() == 0) {
+                        System.out.print("○ "); // Pion blanc
+                    } else {
+                        System.out.print("● "); // Pion noir
+                    }
                 }
             }
             System.out.println("   ║");
@@ -400,8 +162,9 @@ public class TourDeJeu {
      */
     private Pion trouverPionAPosition(ArrayList<Pion> pions, int x, int y) {
         for (Pion pion : pions) {
-            if (pion.getPosition().getX() == x && pion.getPosition().getY() == y) {
-               return pion;
+            Point2D pos = pion.getPosition();
+            if (pos.getX() == x && pos.getY() == y) {
+                return pion;
             }
         }
         return null;
@@ -413,9 +176,8 @@ public class TourDeJeu {
     private void afficherMenuOptions() {
         System.out.println("\n┌─────────────── OPTIONS ───────────────┐");
         System.out.println("│ 1. Déplacer une pièce                 │");
-        System.out.println("│ 2. Voir les coups possibles           │");
-        System.out.println("│ 3. Abandonner la partie               │");
-        System.out.println("│ 4. Sauvegarder et quitter             │");
+        System.out.println("│ 2. Abandonner la partie               │");
+        System.out.println("│ 3. Sauvegarder et quitter             │");
         System.out.println("└───────────────────────────────────────┘");
     }
     
@@ -424,11 +186,16 @@ public class TourDeJeu {
      * Format attendu: lettre + chiffre (ex: A3, B5)
      * @param scanner Le scanner pour lire l'entrée
      * @param message Le message à afficher
-     * @return La position saisie ou null si invalide
+     * @return La position saisie ou null si invalide/annulation
      */
     private Point2D lirePosition(Scanner scanner, String message) {
         System.out.print(message);
         String input = scanner.nextLine().trim().toUpperCase();
+        
+        // Permettre l'annulation
+        if (input.equals("A") || input.equals("ANNULER")) {
+            return null;
+        }
         
         if (input.length() < 2 || input.length() > 3) {
             System.out.println("❌ Format invalide. Utilisez le format lettre+chiffre (ex: A3)");
@@ -464,11 +231,29 @@ public class TourDeJeu {
     }
     
     /**
+     * Vérifie si le tour est valide (a les informations minimales requises)
+     * @return true si le tour est valide, false sinon
+     */
+    public boolean estValide() {
+        return joueurActif != null && 
+               positionDepart != null && 
+               positionArrivee != null;
+    }
+    
+    /**
+     * Réinitialise le tour
+     */
+    public void reinitialiser() {
+        this.positionDepart = null;
+        this.positionArrivee = null;
+    }
+    
+    /**
      * Joue un tour de jeu complet avec interaction utilisateur
      * Cette méthode affiche la grille, propose des choix au joueur,
-     * valide les entrées et exécute le coup
+     * valide les entrées et enregistre le coup
      * 
-     * @param pions La liste des pions sur le plateau (géré par Partie.java)
+     * @param pions La liste des pions sur le plateau
      * @param scanner Le scanner pour lire les entrées utilisateur
      * @return true si le tour s'est bien déroulé, false si abandon/erreur
      */
@@ -482,8 +267,7 @@ public class TourDeJeu {
         System.out.println("\n" + "═".repeat(50));
         System.out.println("🎮 TOUR #" + numeroTour);
         System.out.println("═".repeat(50));
-        System.out.println("👤 Joueur: " + joueurActif.getNom() + 
-                         " (" + joueurActif.getCouleur() + ")");
+        System.out.println("👤 Joueur: " + joueurActif.getNom());
         
         // Affichage de la grille
         afficherGrille(pions);
@@ -493,7 +277,7 @@ public class TourDeJeu {
         
         boolean tourTermine = false;
         while (!tourTermine) {
-            System.out.print("\n➤ Choisissez une option (1-4): ");
+            System.out.print("\n➤ Choisissez une option (1-3): ");
             String choix = scanner.nextLine().trim();
             
             switch (choix) {
@@ -503,13 +287,6 @@ public class TourDeJeu {
                     break;
                     
                 case "2":
-                    // Afficher les coups possibles (à implémenter avec la logique du jeu)
-                    System.out.println("\n📋 Coups possibles:");
-                    System.out.println("   (Cette fonctionnalité sera implémentée avec la classe Partie)");
-                    afficherGrille(pions);
-                    break;
-                    
-                case "3":
                     // Abandonner
                     System.out.print("\n⚠️  Êtes-vous sûr de vouloir abandonner? (O/N): ");
                     String confirmation = scanner.nextLine().trim().toUpperCase();
@@ -519,14 +296,14 @@ public class TourDeJeu {
                     }
                     break;
                     
-                case "4":
+                case "3":
                     // Sauvegarder et quitter
                     System.out.println("💾 Sauvegarde de la partie...");
                     System.out.println("   (Fonctionnalité à implémenter avec Sauvegarde.java)");
                     return false;
                     
                 default:
-                    System.out.println("❌ Option invalide. Choisissez entre 1 et 4.");
+                    System.out.println("❌ Option invalide. Choisissez entre 1 et 3.");
             }
         }
         
@@ -545,22 +322,27 @@ public class TourDeJeu {
         
         // Lecture de la position de départ
         Point2D depart = null;
+        Pion pionADeplacer = null;
         while (depart == null) {
             depart = lirePosition(scanner, "📍 Position de départ (ex: A3) ou 'A' pour annuler: ");
             if (depart == null) {
-                System.out.print("   Réessayer ou taper 'A' pour annuler: ");
-                String retry = scanner.nextLine().trim().toUpperCase();
-                if (retry.equals("A")) {
-                    return false;
-                }
+                System.out.println("⚠️  Annulation du déplacement.");
+                return false;
+            }
+            
+            // Vérifier qu'il y a bien une pièce à cette position
+            pionADeplacer = trouverPionAPosition(pions, depart.getX(), depart.getY());
+            if (pionADeplacer == null) {
+                System.out.println("❌ Aucune pièce à cette position.");
+                depart = null;
             } else {
-                // Vérifier qu'il y a bien une pièce à cette position
-                Pion pionDepart = trouverPionAPosition(pions, depart.getX(), depart.getY());
-                if (pionDepart == null) {
-                    System.out.println("❌ Aucune pièce à cette position.");
+                // Vérifier que la pièce appartient au joueur actif
+                int couleurJoueur = joueurActif.getCouleur() ? 1 : 0;
+                if (pionADeplacer.getCouleur() != couleurJoueur) {
+                    System.out.println("❌ Cette pièce ne vous appartient pas.");
                     depart = null;
+                    pionADeplacer = null;
                 }
-                // TODO: Vérifier que la pièce appartient au joueur actif
             }
         }
         
@@ -569,18 +351,21 @@ public class TourDeJeu {
         while (arrivee == null) {
             arrivee = lirePosition(scanner, "📍 Position d'arrivée (ex: B4) ou 'A' pour annuler: ");
             if (arrivee == null) {
-                System.out.print("   Réessayer ou taper 'A' pour annuler: ");
-                String retry = scanner.nextLine().trim().toUpperCase();
-                if (retry.equals("A")) {
-                    return false;
-                }
-            } else {
-                // Vérifier que la case d'arrivée est vide
-                Pion pionArrivee = trouverPionAPosition(pions, arrivee.getX(), arrivee.getY());
-                if (pionArrivee != null) {
-                    System.out.println("❌ La case d'arrivée est occupée.");
-                    arrivee = null;
-                }
+                System.out.println("⚠️  Annulation du déplacement.");
+                return false;
+            }
+            
+            // Vérifier que la case d'arrivée est vide
+            Pion pionArrivee = trouverPionAPosition(pions, arrivee.getX(), arrivee.getY());
+            if (pionArrivee != null) {
+                System.out.println("❌ La case d'arrivée est occupée.");
+                arrivee = null;
+            }
+            
+            // Vérifier que c'est une case noire (jouable)
+            if (arrivee != null && (arrivee.getX() + arrivee.getY()) % 2 == 0) {
+                System.out.println("❌ Les pions ne peuvent se déplacer que sur les cases noires.");
+                arrivee = null;
             }
         }
         
@@ -588,14 +373,56 @@ public class TourDeJeu {
         this.positionDepart = depart;
         this.positionArrivee = arrivee;
         
-        // TODO: Validation du coup avec les règles du jeu
-        // TODO: Vérification des captures
-        // TODO: Exécution du déplacement sur le plateau
-        // TODO: Vérification de la transformation en dame
-        
-        System.out.println("\n✅ Déplacement enregistré: " + genererNotation());
-        System.out.println("   Note: La validation et l'exécution seront gérées par Partie.java");
-        
-        return true;
+        // Tentative de déplacement du pion
+        try {
+            double distance = depart.distance(arrivee);
+            
+            // Si distance ≈ √2, c'est un déplacement simple
+            if (Math.abs(distance - Math.sqrt(2)) < 0.1) {
+                pionADeplacer.deplacer(arrivee);
+                System.out.println("\n✅ Déplacement effectué: " + formatPosition(depart) + " → " + formatPosition(arrivee));
+            }
+            // Si distance ≈ 2√2, c'est potentiellement une capture
+            else if (Math.abs(distance - 2 * Math.sqrt(2)) < 0.1) {
+                pionADeplacer.capturer(arrivee);
+                System.out.println("\n✅ Capture effectuée: " + formatPosition(depart) + " ✕ " + formatPosition(arrivee));
+            }
+            else {
+                System.out.println("❌ Déplacement invalide: distance incorrecte.");
+                return false;
+            }
+            
+            return true;
+            
+        } catch (Exception e) {
+            System.out.println("❌ Erreur lors du déplacement: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Formate une position pour l'affichage (ex: [2,3] → "C3")
+     * @param pos La position à formater
+     * @return La chaîne formatée
+     */
+    private String formatPosition(Point2D pos) {
+        char colonne = (char) ('A' + pos.getY());
+        int ligne = pos.getX() + 1;
+        return "" + colonne + ligne;
+    }
+    
+    /**
+     * Retourne une représentation textuelle du tour
+     * @return Une chaîne décrivant le tour
+     */
+    @Override
+    public String toString() {
+        String coup = "pas encore joué";
+        if (positionDepart != null && positionArrivee != null) {
+            coup = formatPosition(positionDepart) + " → " + formatPosition(positionArrivee);
+        }
+        return "Tour #" + numeroTour + 
+               " - Joueur: " + (joueurActif != null ? joueurActif.getNom() : "inconnu") +
+               " | Coup: " + coup;
     }
 }
